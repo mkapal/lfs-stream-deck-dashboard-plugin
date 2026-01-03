@@ -1,0 +1,62 @@
+{
+  "Name": "Live for Speed Dashboard",
+  "Version": "0.1.0.0",
+  "Author": "Martin Kapal",
+  "Actions": [
+    {
+      "UUID": "com.martinkapal.lfs.dashboard.connection",
+      "Name": "LFS Connection Settings",
+      "Icon": "imgs/actions/empty",
+      "Controllers": ["Keypad"],
+      "PropertyInspectorPath": "ui/connection.html",
+      "Tooltip": "Configure global InSim + OutGauge connection",
+      "States": [
+        {
+          "Image": "imgs/actions/empty",
+          "Title": "LFS Connect"
+        }
+      ]
+    },
+    {
+      "UUID": "com.martinkapal.lfs.dashboard.indicator-left",
+      "Name": "Left Indicator",
+      "Icon": "imgs/actions/empty",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [
+        {
+          "Name": "Off",
+          "Image": "imgs/actions/leftIndicatorOff"
+        },
+        {
+          "Name": "On",
+          "Image": "imgs/actions/leftIndicatorOn"
+        }
+      ]
+    }
+  ],
+  "Category": "Live for Speed Dashboard",
+  "CategoryIcon": "imgs/plugin/category-icon",
+  "CodePath": "bin/plugin.js",
+  "Description": "Display and control your Live for Speed Dashboard",
+  "Icon": "imgs/plugin/marketplace",
+  "SDKVersion": 3,
+  "Software": {
+    "MinimumVersion": "6.9"
+  },
+  "OS": [
+    {
+      "Platform": "mac",
+      "MinimumVersion": "12"
+    },
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ],
+  "Nodejs": {
+    "Version": "20",
+    "Debug": "enabled"
+  },
+  "UUID": "com.martinkapal.lfs.dashboard"
+}

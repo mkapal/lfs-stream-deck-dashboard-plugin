@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+  <head lang="en">
+    <title>Increment Counter Settings</title>
+    <meta charset="utf-8" />
+    <script src="https://sdpi-components.dev/releases/v4/sdpi-components.js"></script>
+  </head>
+
+  <body>
+    <sdpi-item label="InSim host">
+      <sdpi-textfield
+        global
+        setting="insimHost"
+        placeholder="127.0.0.1"
+      ></sdpi-textfield>
+    </sdpi-item>
+
+    <sdpi-item label="InSim port">
+      <sdpi-textfield
+        global
+        setting="insimPort"
+        placeholder="29999"
+      ></sdpi-textfield>
+    </sdpi-item>
+
+    <sdpi-item label="InSim admin password (optional)">
+      <sdpi-password global setting="insimAdmin"></sdpi-password>
+    </sdpi-item>
+
+    <sdpi-item label="OutGauge host">
+      <sdpi-textfield
+        global
+        setting="outgaugeHost"
+        placeholder="127.0.0.1"
+      ></sdpi-textfield>
+    </sdpi-item>
+
+    <sdpi-item label="OutGauge port">
+      <sdpi-textfield
+        global
+        setting="outgaugePort"
+        placeholder="30000"
+      ></sdpi-textfield>
+    </sdpi-item>
+  </body>
+</html>
