@@ -9,8 +9,8 @@ import { DashLights, OutGaugePack } from "node-insim";
 import { insimHub } from "../services/insim";
 import { outGaugeHub } from "../services/outgauge";
 
-@action({ UUID: "com.martinkapal.lfs.dashboard.indicator-left" })
-export class IndicatorLeftAction extends SingletonAction {
+@action({ UUID: "com.martinkapal.lfs.dashboard.indicator-hazards" })
+export class IndicatorHazardsAction extends SingletonAction {
   private unsubscribe?: () => void;
   private lastState: 0 | 1 = 0;
 
@@ -21,7 +21,9 @@ export class IndicatorLeftAction extends SingletonAction {
 
     this.unsubscribe?.();
     this.unsubscribe = outGaugeHub.subscribe((p: OutGaugePack) => {
-      const isOn = (p.ShowLights & DashLights.DL_SIGNAL_L) !== 0;
+      const isOn =
+        (p.ShowLights & DashLights.DL_SIGNAL_L) !== 0 &&
+        (p.ShowLights & DashLights.DL_SIGNAL_R) !== 0;
       const newState: 0 | 1 = isOn ? 1 : 0;
 
       if (newState !== this.lastState) {
@@ -33,17 +35,19 @@ export class IndicatorLeftAction extends SingletonAction {
     });
 
     streamDeck.logger.info(
-      "IndicatorLeftAction appeared and subscribed to OutGaugeHub",
+      "IndicatorHazardsAction appeared and subscribed to OutGaugeHub",
     );
   }
 
   override async onWillDisappear(_ev: WillDisappearEvent): Promise<void> {
     this.unsubscribe?.();
     this.unsubscribe = undefined;
-    streamDeck.logger.info("IndicatorLeftAction disappeared and unsubscribed");
+    streamDeck.logger.info(
+      "IndicatorHazardsAction disappeared and unsubscribed",
+    );
   }
 
   override async onKeyDown(_ev: KeyDownEvent): Promise<void> {
-    insimHub.toggleIndicators("left");
+    insimHub.toggleIndicators("all");
   }
 }

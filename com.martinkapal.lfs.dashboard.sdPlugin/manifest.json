@@ -33,6 +33,40 @@
           "Image": "imgs/actions/leftIndicatorOn"
         }
       ]
+    },
+    {
+      "UUID": "com.martinkapal.lfs.dashboard.indicator-right",
+      "Name": "Right Indicator",
+      "Icon": "imgs/actions/empty",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [
+        {
+          "Name": "Off",
+          "Image": "imgs/actions/leftIndicatorOff"
+        },
+        {
+          "Name": "On",
+          "Image": "imgs/actions/leftIndicatorOn"
+        }
+      ]
+    },
+    {
+      "UUID": "com.martinkapal.lfs.dashboard.indicator-hazards",
+      "Name": "Hazards",
+      "Icon": "imgs/actions/empty",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [
+        {
+          "Name": "Off",
+          "Image": "imgs/actions/leftIndicatorOff"
+        },
+        {
+          "Name": "On",
+          "Image": "imgs/actions/leftIndicatorOn"
+        }
+      ]
     }
   ],
   "Category": "Live for Speed Dashboard",

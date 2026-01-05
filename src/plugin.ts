@@ -4,7 +4,9 @@ import { insimHub } from "./services/insim";
 import { outGaugeHub } from "./services/outgauge";
 
 import { ConnectionAction } from "./actions/connection";
-import { LeftIndicatorAction } from "./actions/indicator-left";
+import { IndicatorLeftAction } from "./actions/indicator-left";
+import { IndicatorRightAction } from "./actions/indicator-right";
+import { IndicatorHazardsAction } from "./actions/indicator-hazards";
 
 streamDeck.logger.setLevel("debug");
 
@@ -43,12 +45,12 @@ async function applyGlobals(s?: GlobalSettings) {
 }
 
 (async () => {
-  // streamDeck.settings.useExperimentalMessageIdentifiers = true;
-
   streamDeck.actions.registerAction(new ConnectionAction());
-  streamDeck.actions.registerAction(new LeftIndicatorAction());
+  streamDeck.actions.registerAction(new IndicatorLeftAction());
+  streamDeck.actions.registerAction(new IndicatorRightAction());
+  streamDeck.actions.registerAction(new IndicatorHazardsAction());
 
-  // streamDeck.logger.debug("Getting global settings...");
+  streamDeck.logger.debug("Getting global settings...");
   // const gs = await streamDeck.settings.getGlobalSettings<GlobalSettings>();
   // streamDeck.logger.debug("Global settings loaded");
 
