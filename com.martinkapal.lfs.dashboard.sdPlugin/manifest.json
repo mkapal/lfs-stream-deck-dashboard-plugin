@@ -26,11 +26,11 @@
       "States": [
         {
           "Name": "Off",
-          "Image": "imgs/actions/leftIndicatorOff"
+          "Image": "imgs/actions/indicator-left-off"
         },
         {
           "Name": "On",
-          "Image": "imgs/actions/leftIndicatorOn"
+          "Image": "imgs/actions/indicator-left-on"
         }
       ]
     },
@@ -43,11 +43,11 @@
       "States": [
         {
           "Name": "Off",
-          "Image": "imgs/actions/leftIndicatorOff"
+          "Image": "imgs/actions/indicator-right-off"
         },
         {
           "Name": "On",
-          "Image": "imgs/actions/leftIndicatorOn"
+          "Image": "imgs/actions/indicator-right-on"
         }
       ]
     },
