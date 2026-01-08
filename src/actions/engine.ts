@@ -10,7 +10,7 @@ import { outGaugeHub } from "../services/outgauge";
 @action({ UUID: "com.martinkapal.lfs.dashboard.engine" })
 export class EngineAction extends SingletonAction {
   private unsubscribe?: () => void;
-  private lastState: 0 | 1 = 0;
+  private lastState: 0 | 1 | 2 = 0;
 
   override async onWillAppear(ev: WillAppearEvent): Promise<void> {
     if (ev.action.isKey()) {
@@ -20,7 +20,9 @@ export class EngineAction extends SingletonAction {
     this.unsubscribe?.();
     this.unsubscribe = outGaugeHub.subscribe((p: OutGaugePack) => {
       const isOn = (p.ShowLights & DashLights.DL_ENGINE) !== 0;
-      const newState = isOn ? 1 : 0;
+      const isSevere = (p.ShowLights & 0x10000000) !== 0;
+      const newState = isOn ? (isSevere ? 2 : 1) : 0;
+
       if (newState !== this.lastState) {
         this.lastState = newState;
         if (ev.action.isKey()) {

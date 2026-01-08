@@ -148,8 +148,9 @@
       "Controllers": ["Keypad"],
       "DisableAutomaticStates": true,
       "States": [
-        { "Name": "Off", "Image": "imgs/actions/engine-off" },
-        { "Name": "On", "Image": "imgs/actions/engine-on" }
+        { "Name": "No Damage", "Image": "imgs/actions/engine-off" },
+        { "Name": "Minor Damage", "Image": "imgs/actions/engine-minor" },
+        { "Name": "Severe Damage", "Image": "imgs/actions/engine-on" }
       ]
     },
     {
