@@ -1,16 +1,14 @@
 import streamDeck, {
   action,
-  KeyDownEvent,
   SingletonAction,
   WillAppearEvent,
   WillDisappearEvent,
 } from "@elgato/streamdeck";
 import { DashLights, OutGaugePack } from "node-insim";
 import { outGaugeHub } from "../services/outgauge";
-import { insimHub } from "../services/insim";
 
-@action({ UUID: "com.martinkapal.lfs.dashboard.indicator-left" })
-export class IndicatorLeftAction extends SingletonAction {
+@action({ UUID: "com.martinkapal.lfs.dashboard.shift-up" })
+export class ShiftUpAction extends SingletonAction {
   private unsubscribe?: () => void;
   private lastState: 0 | 1 = 0;
 
@@ -21,8 +19,8 @@ export class IndicatorLeftAction extends SingletonAction {
 
     this.unsubscribe?.();
     this.unsubscribe = outGaugeHub.subscribe((p: OutGaugePack) => {
-      const isLeftOn = (p.ShowLights & DashLights.DL_SIGNAL_L) !== 0;
-      const newState = isLeftOn ? 1 : 0;
+      const isOn = (p.ShowLights & DashLights.DL_SHIFT) !== 0;
+      const newState = isOn ? 1 : 0;
 
       if (newState !== this.lastState) {
         this.lastState = newState;
@@ -33,17 +31,13 @@ export class IndicatorLeftAction extends SingletonAction {
     });
 
     streamDeck.logger.info(
-      "IndicatorLeftAction appeared and subscribed to OutGaugeHub",
+      "ShiftUpAction appeared and subscribed to OutGaugeHub",
     );
   }
 
   override async onWillDisappear(_ev: WillDisappearEvent): Promise<void> {
     this.unsubscribe?.();
     this.unsubscribe = undefined;
-    streamDeck.logger.info("IndicatorLeftAction disappeared and unsubscribed");
-  }
-
-  override async onKeyDown(_ev: KeyDownEvent): Promise<void> {
-    insimHub.toggleIndicators("left");
+    streamDeck.logger.info("ShiftUpAction disappeared and unsubscribed");
   }
 }

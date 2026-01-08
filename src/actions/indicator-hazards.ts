@@ -6,8 +6,8 @@ import streamDeck, {
   WillDisappearEvent,
 } from "@elgato/streamdeck";
 import { DashLights, OutGaugePack } from "node-insim";
-import { insimHub } from "../services/insim";
 import { outGaugeHub } from "../services/outgauge";
+import { insimHub } from "../services/insim";
 
 @action({ UUID: "com.martinkapal.lfs.dashboard.indicator-hazards" })
 export class IndicatorHazardsAction extends SingletonAction {
@@ -21,10 +21,10 @@ export class IndicatorHazardsAction extends SingletonAction {
 
     this.unsubscribe?.();
     this.unsubscribe = outGaugeHub.subscribe((p: OutGaugePack) => {
-      const isOn =
+      const isHazardOn =
         (p.ShowLights & DashLights.DL_SIGNAL_L) !== 0 &&
         (p.ShowLights & DashLights.DL_SIGNAL_R) !== 0;
-      const newState: 0 | 1 = isOn ? 1 : 0;
+      const newState = isHazardOn ? 1 : 0;
 
       if (newState !== this.lastState) {
         this.lastState = newState;

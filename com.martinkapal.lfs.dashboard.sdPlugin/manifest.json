@@ -18,6 +18,23 @@
       ]
     },
     {
+      "UUID": "com.martinkapal.lfs.dashboard.indicator-shared",
+      "Name": "Indicator (Any)",
+      "Icon": "imgs/actions/empty",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [
+        {
+          "Name": "Off",
+          "Image": "imgs/actions/indicator-shared-off"
+        },
+        {
+          "Name": "On",
+          "Image": "imgs/actions/indicator-shared-on"
+        }
+      ]
+    },
+    {
       "UUID": "com.martinkapal.lfs.dashboard.indicator-left",
       "Name": "Left Indicator",
       "Icon": "imgs/actions/empty",
@@ -60,11 +77,271 @@
       "States": [
         {
           "Name": "Off",
-          "Image": "imgs/actions/leftIndicatorOff"
+          "Image": "imgs/actions/indicator-hazards-off"
         },
         {
           "Name": "On",
-          "Image": "imgs/actions/leftIndicatorOn"
+          "Image": "imgs/actions/indicator-hazards-on"
+        }
+      ]
+    },
+    {
+      "UUID": "com.martinkapal.lfs.dashboard.shift-up",
+      "Name": "Shift Up",
+      "Icon": "imgs/actions/empty",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [
+        {
+          "Name": "Off",
+          "Image": "imgs/actions/shift-up-off"
+        },
+        {
+          "Name": "On",
+          "Image": "imgs/actions/shift-up-on"
+        }
+      ]
+    },
+    {
+      "UUID": "com.martinkapal.lfs.dashboard.sidelights",
+      "Name": "Sidelights",
+      "Icon": "imgs/actions/empty",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [
+        {
+          "Name": "Off",
+          "Image": "imgs/actions/sidelights-off"
+        },
+        {
+          "Name": "On",
+          "Image": "imgs/actions/sidelights-on"
+        }
+      ]
+    },
+    {
+      "UUID": "com.martinkapal.lfs.dashboard.abs",
+      "Name": "ABS",
+      "Icon": "imgs/actions/empty",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [
+        { "Name": "Off", "Image": "imgs/actions/abs-off" },
+        { "Name": "On", "Image": "imgs/actions/abs-on" }
+      ]
+    },
+    {
+      "UUID": "com.martinkapal.lfs.dashboard.battery",
+      "Name": "Battery Warning",
+      "Icon": "imgs/actions/empty",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [
+        { "Name": "Off", "Image": "imgs/actions/battery-off" },
+        { "Name": "On", "Image": "imgs/actions/battery-on" }
+      ]
+    },
+    {
+      "UUID": "com.martinkapal.lfs.dashboard.engine",
+      "Name": "Engine Warning",
+      "Icon": "imgs/actions/empty",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [
+        { "Name": "Off", "Image": "imgs/actions/engine-off" },
+        { "Name": "On", "Image": "imgs/actions/engine-on" }
+      ]
+    },
+    {
+      "UUID": "com.martinkapal.lfs.dashboard.foglight-front",
+      "Name": "Foglight Front",
+      "Icon": "imgs/actions/empty",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [
+        { "Name": "Off", "Image": "imgs/actions/foglight-front-off" },
+        { "Name": "On", "Image": "imgs/actions/foglight-front-on" }
+      ]
+    },
+    {
+      "UUID": "com.martinkapal.lfs.dashboard.foglight-rear",
+      "Name": "Foglight Rear",
+      "Icon": "imgs/actions/empty",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [
+        { "Name": "Off", "Image": "imgs/actions/foglight-rear-off" },
+        { "Name": "On", "Image": "imgs/actions/foglight-rear-on" }
+      ]
+    },
+    {
+      "UUID": "com.martinkapal.lfs.dashboard.fuel",
+      "Name": "Fuel Warning",
+      "Icon": "imgs/actions/empty",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [
+        { "Name": "Off", "Image": "imgs/actions/fuel-off" },
+        { "Name": "On", "Image": "imgs/actions/fuel-on" }
+      ]
+    },
+    {
+      "UUID": "com.martinkapal.lfs.dashboard.handbrake",
+      "Name": "Handbrake",
+      "Icon": "imgs/actions/empty",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [
+        { "Name": "Off", "Image": "imgs/actions/handbrake-off" },
+        { "Name": "On", "Image": "imgs/actions/handbrake-on" }
+      ]
+    },
+    {
+      "UUID": "com.martinkapal.lfs.dashboard.high-beam",
+      "Name": "High Beam",
+      "Icon": "imgs/actions/empty",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [
+        { "Name": "Off", "Image": "imgs/actions/high-beam-off" },
+        { "Name": "On", "Image": "imgs/actions/high-beam-on" }
+      ]
+    },
+    {
+      "UUID": "com.martinkapal.lfs.dashboard.low-beam",
+      "Name": "Low Beam",
+      "Icon": "imgs/actions/empty",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [
+        { "Name": "Off", "Image": "imgs/actions/low-beam-off" },
+        { "Name": "On", "Image": "imgs/actions/low-beam-on" }
+      ]
+    },
+    {
+      "UUID": "com.martinkapal.lfs.dashboard.neutral",
+      "Name": "Neutral",
+      "Icon": "imgs/actions/empty",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [
+        { "Name": "Off", "Image": "imgs/actions/neutral-off" },
+        { "Name": "On", "Image": "imgs/actions/neutral-on" }
+      ]
+    },
+    {
+      "UUID": "com.martinkapal.lfs.dashboard.oil-pressure",
+      "Name": "Oil Pressure",
+      "Icon": "imgs/actions/empty",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [
+        { "Name": "Off", "Image": "imgs/actions/oil-pressure-off" },
+        { "Name": "On", "Image": "imgs/actions/oil-pressure-on" }
+      ]
+    },
+    {
+      "UUID": "com.martinkapal.lfs.dashboard.pit-limiter",
+      "Name": "Pit Limiter",
+      "Icon": "imgs/actions/empty",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [
+        { "Name": "Off", "Image": "imgs/actions/pit-limiter-off" },
+        { "Name": "On", "Image": "imgs/actions/pit-limiter-on" }
+      ]
+    },
+    {
+      "UUID": "com.martinkapal.lfs.dashboard.traction-control",
+      "Name": "Traction Control",
+      "Icon": "imgs/actions/empty",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [
+        { "Name": "Off", "Image": "imgs/actions/traction-control-off" },
+        { "Name": "On", "Image": "imgs/actions/traction-control-on" }
+      ]
+    },
+    {
+      "UUID": "com.martinkapal.lfs.dashboard.speed-display",
+      "Name": "Speed",
+      "Icon": "imgs/actions/empty",
+      "Controllers": ["Keypad"],
+      "States": [
+        {
+          "Image": "imgs/actions/empty",
+          "Title": "Speed",
+          "FontSize": 35,
+          "TitleAlignment": "middle"
+        }
+      ]
+    },
+    {
+      "UUID": "com.martinkapal.lfs.dashboard.rpm-display",
+      "Name": "RPM",
+      "Icon": "imgs/actions/empty",
+      "Controllers": ["Keypad"],
+      "States": [
+        {
+          "Image": "imgs/actions/empty",
+          "Title": "RPM",
+          "FontSize": 25,
+          "TitleAlignment": "middle"
+        }
+      ]
+    },
+    {
+      "UUID": "com.martinkapal.lfs.dashboard.gear-display",
+      "Name": "Gear",
+      "Icon": "imgs/actions/empty",
+      "Controllers": ["Keypad"],
+      "States": [
+        {
+          "Image": "imgs/actions/empty",
+          "Title": "Gear",
+          "FontSize": 50,
+          "TitleAlignment": "middle"
+        }
+      ]
+    },
+    {
+      "UUID": "com.martinkapal.lfs.dashboard.fuel-percent",
+      "Name": "Fuel %",
+      "Icon": "imgs/actions/empty",
+      "Controllers": ["Keypad"],
+      "States": [
+        {
+          "Image": "imgs/actions/empty",
+          "Title": "Fuel %",
+          "FontSize": 20,
+          "TitleAlignment": "middle"
+        }
+      ]
+    },
+    {
+      "UUID": "com.martinkapal.lfs.dashboard.turbo",
+      "Name": "Turbo Pressure",
+      "Icon": "imgs/actions/empty",
+      "Controllers": ["Keypad"],
+      "States": [
+        {
+          "Image": "imgs/actions/empty",
+          "Title": "Turbo",
+          "FontSize": 16,
+          "TitleAlignment": "middle"
+        }
+      ]
+    },
+    {
+      "UUID": "com.martinkapal.lfs.dashboard.display1",
+      "Name": "Display 1",
+      "Icon": "imgs/actions/empty",
+      "Controllers": ["Keypad"],
+      "States": [
+        {
+          "Image": "imgs/actions/empty",
+          "Title": "[Display 1]",
+          "TitleAlignment": "middle"
         }
       ]
     }

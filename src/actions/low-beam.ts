@@ -5,12 +5,10 @@ import streamDeck, {
   WillAppearEvent,
   WillDisappearEvent,
 } from "@elgato/streamdeck";
-import { DashLights, OutGaugePack } from "node-insim";
-import { outGaugeHub } from "../services/outgauge";
 import { insimHub } from "../services/insim";
 
-@action({ UUID: "com.martinkapal.lfs.dashboard.indicator-left" })
-export class IndicatorLeftAction extends SingletonAction {
+@action({ UUID: "com.martinkapal.lfs.dashboard.low-beam" })
+export class LowBeamAction extends SingletonAction {
   private unsubscribe?: () => void;
   private lastState: 0 | 1 = 0;
 
@@ -20,10 +18,8 @@ export class IndicatorLeftAction extends SingletonAction {
     }
 
     this.unsubscribe?.();
-    this.unsubscribe = outGaugeHub.subscribe((p: OutGaugePack) => {
-      const isLeftOn = (p.ShowLights & DashLights.DL_SIGNAL_L) !== 0;
-      const newState = isLeftOn ? 1 : 0;
-
+    this.unsubscribe = insimHub.subscribeCarSwitches((s) => {
+      const newState = s.head === "low" ? 1 : 0;
       if (newState !== this.lastState) {
         this.lastState = newState;
         if (ev.action.isKey()) {
@@ -32,18 +28,16 @@ export class IndicatorLeftAction extends SingletonAction {
       }
     });
 
-    streamDeck.logger.info(
-      "IndicatorLeftAction appeared and subscribed to OutGaugeHub",
-    );
+    streamDeck.logger.info("LowBeamAction appeared and subscribed to InSimHub");
   }
 
   override async onWillDisappear(_ev: WillDisappearEvent): Promise<void> {
     this.unsubscribe?.();
     this.unsubscribe = undefined;
-    streamDeck.logger.info("IndicatorLeftAction disappeared and unsubscribed");
+    streamDeck.logger.info("LowBeamAction disappeared and unsubscribed");
   }
 
   override async onKeyDown(_ev: KeyDownEvent): Promise<void> {
-    insimHub.toggleIndicators("left");
+    insimHub.toggleLights("low");
   }
 }

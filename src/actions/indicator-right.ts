@@ -6,8 +6,8 @@ import streamDeck, {
   WillDisappearEvent,
 } from "@elgato/streamdeck";
 import { DashLights, OutGaugePack } from "node-insim";
-import { insimHub } from "../services/insim";
 import { outGaugeHub } from "../services/outgauge";
+import { insimHub } from "../services/insim";
 
 @action({ UUID: "com.martinkapal.lfs.dashboard.indicator-right" })
 export class IndicatorRightAction extends SingletonAction {
@@ -21,8 +21,8 @@ export class IndicatorRightAction extends SingletonAction {
 
     this.unsubscribe?.();
     this.unsubscribe = outGaugeHub.subscribe((p: OutGaugePack) => {
-      const isOn = (p.ShowLights & DashLights.DL_SIGNAL_R) !== 0;
-      const newState: 0 | 1 = isOn ? 1 : 0;
+      const isRightOn = (p.ShowLights & DashLights.DL_SIGNAL_R) !== 0;
+      const newState = isRightOn ? 1 : 0;
 
       if (newState !== this.lastState) {
         this.lastState = newState;

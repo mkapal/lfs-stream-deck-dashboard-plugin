@@ -12,8 +12,10 @@ import streamDeck from "@elgato/streamdeck";
 type Cfg = { host: string; port: number; admin: string };
 
 const indicatorStates = ["off", "left", "right", "all"] as const;
+const headlightStates = ["off", "side", "low", "high"] as const;
 
 type IndicatorState = (typeof indicatorStates)[number];
+type HeadlightState = (typeof headlightStates)[number];
 
 class InSimHub {
   private cfg?: Cfg;
@@ -24,9 +26,19 @@ class InSimHub {
 
   private carSwitchesState: {
     indicators: IndicatorState;
+    head: HeadlightState;
+    fogFront: boolean;
+    fogRear: boolean;
   } = {
     indicators: "off",
+    head: "off",
+    fogFront: false,
+    fogRear: false,
   };
+
+  private switchesListeners = new Set<
+    (s: typeof this.carSwitchesState) => void
+  >();
 
   async applyConfig(next: Cfg) {
     const changed =
@@ -98,18 +110,41 @@ class InSimHub {
 
     this.insim.on(PacketType.ISP_SMALL, (packet) => {
       if (packet.ReqI === 1 && packet.SubT === SmallType.SMALL_LCL) {
-        const indicatorValue = (packet.UVal & (3 << 16)) >> 16;
+        const u = packet.UVal;
+        const indicatorValue = (u & (3 << 16)) >> 16;
         const indicators = indicatorStates[indicatorValue] ?? "off";
 
-        streamDeck.logger.debug({ indicators });
+        const headVal = (u & (3 << 18)) >> 18;
 
-        this.carSwitchesState = {
-          indicators,
-        };
+        const head = headlightStates[headVal] ?? "off";
+
+        const fogFront = (u & (1 << 21)) >> 21 !== 0;
+        const fogRear = (u & (1 << 20)) >> 20 !== 0;
+
+        const next = { indicators, head, fogFront, fogRear } as const;
+        const changed =
+          next.indicators !== this.carSwitchesState.indicators ||
+          next.head !== this.carSwitchesState.head ||
+          next.fogFront !== this.carSwitchesState.fogFront ||
+          next.fogRear !== this.carSwitchesState.fogRear;
+
+        if (changed) {
+          this.carSwitchesState = { ...next };
+          for (const cb of this.switchesListeners) cb(this.carSwitchesState);
+        }
       }
     });
 
     this.isConnecting = false;
+  }
+
+  subscribeCarSwitches(
+    cb: (s: typeof this.carSwitchesState) => void,
+  ): () => void {
+    this.connectOnce();
+    this.switchesListeners.add(cb);
+    cb(this.carSwitchesState);
+    return () => this.switchesListeners.delete(cb);
   }
 
   reconnect() {
@@ -163,6 +198,18 @@ class InSimHub {
       this.insim.sendMessage(`/light ind off`);
     } else {
       this.insim.sendMessage(`/light ind ${indicators}`);
+    }
+  }
+
+  toggleLights(lights: Exclude<HeadlightState, "off">) {
+    if (!this.isConnected) {
+      return;
+    }
+
+    if (this.carSwitchesState.head === lights) {
+      this.insim.sendMessage(`/light head off`);
+    } else {
+      this.insim.sendMessage(`/light head ${lights}`);
     }
   }
 }
