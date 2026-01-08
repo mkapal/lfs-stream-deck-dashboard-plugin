@@ -10,7 +10,7 @@ import { outGaugeHub } from "../services/outgauge";
 @action({ UUID: "com.martinkapal.lfs.dashboard.pit-limiter" })
 export class PitLimiterAction extends SingletonAction {
   private unsubscribe?: () => void;
-  private lastState: 0 | 1 = 0;
+  private lastState: 0 | 1 | 2 = 0; // 0: N/A, 1: Off, 2: On
 
   override async onWillAppear(ev: WillAppearEvent): Promise<void> {
     if (ev.action.isKey()) {
@@ -19,8 +19,10 @@ export class PitLimiterAction extends SingletonAction {
 
     this.unsubscribe?.();
     this.unsubscribe = outGaugeHub.subscribe((p: OutGaugePack) => {
+      const isAvailable = (p.DashLights & DashLights.DL_PITSPEED) !== 0;
       const isOn = (p.ShowLights & DashLights.DL_PITSPEED) !== 0;
-      const newState = isOn ? 1 : 0;
+      const newState: 0 | 1 | 2 = isAvailable ? (isOn ? 2 : 1) : 0;
+
       if (newState !== this.lastState) {
         this.lastState = newState;
         if (ev.action.isKey()) {

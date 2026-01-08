@@ -92,6 +92,7 @@
       "Controllers": ["Keypad"],
       "DisableAutomaticStates": true,
       "States": [
+        { "Name": "N/A", "Image": "imgs/actions/empty" },
         {
           "Name": "Off",
           "Image": "imgs/actions/shift-up-off"
@@ -126,6 +127,7 @@
       "Controllers": ["Keypad"],
       "DisableAutomaticStates": true,
       "States": [
+        { "Name": "N/A", "Image": "imgs/actions/empty" },
         { "Name": "Off", "Image": "imgs/actions/abs-off" },
         { "Name": "On", "Image": "imgs/actions/abs-on" }
       ]
@@ -137,6 +139,7 @@
       "Controllers": ["Keypad"],
       "DisableAutomaticStates": true,
       "States": [
+        { "Name": "N/A", "Image": "imgs/actions/empty" },
         { "Name": "Off", "Image": "imgs/actions/battery-off" },
         { "Name": "On", "Image": "imgs/actions/battery-on" }
       ]
@@ -148,6 +151,7 @@
       "Controllers": ["Keypad"],
       "DisableAutomaticStates": true,
       "States": [
+        { "Name": "N/A", "Image": "imgs/actions/empty" },
         { "Name": "No Damage", "Image": "imgs/actions/engine-off" },
         { "Name": "Minor Damage", "Image": "imgs/actions/engine-minor" },
         { "Name": "Severe Damage", "Image": "imgs/actions/engine-on" }
@@ -182,6 +186,7 @@
       "Controllers": ["Keypad"],
       "DisableAutomaticStates": true,
       "States": [
+        { "Name": "N/A", "Image": "imgs/actions/empty" },
         { "Name": "Off", "Image": "imgs/actions/fuel-off" },
         { "Name": "On", "Image": "imgs/actions/fuel-on" }
       ]
@@ -193,6 +198,7 @@
       "Controllers": ["Keypad"],
       "DisableAutomaticStates": true,
       "States": [
+        { "Name": "N/A", "Image": "imgs/actions/empty" },
         { "Name": "Off", "Image": "imgs/actions/handbrake-off" },
         { "Name": "On", "Image": "imgs/actions/handbrake-on" }
       ]
@@ -226,6 +232,7 @@
       "Controllers": ["Keypad"],
       "DisableAutomaticStates": true,
       "States": [
+        { "Name": "N/A", "Image": "imgs/actions/empty" },
         { "Name": "Off", "Image": "imgs/actions/neutral-off" },
         { "Name": "On", "Image": "imgs/actions/neutral-on" }
       ]
@@ -237,6 +244,7 @@
       "Controllers": ["Keypad"],
       "DisableAutomaticStates": true,
       "States": [
+        { "Name": "N/A", "Image": "imgs/actions/empty" },
         { "Name": "Off", "Image": "imgs/actions/oil-pressure-off" },
         { "Name": "On", "Image": "imgs/actions/oil-pressure-on" }
       ]
@@ -248,6 +256,7 @@
       "Controllers": ["Keypad"],
       "DisableAutomaticStates": true,
       "States": [
+        { "Name": "N/A", "Image": "imgs/actions/empty" },
         { "Name": "Off", "Image": "imgs/actions/pit-limiter-off" },
         { "Name": "On", "Image": "imgs/actions/pit-limiter-on" }
       ]
@@ -259,6 +268,7 @@
       "Controllers": ["Keypad"],
       "DisableAutomaticStates": true,
       "States": [
+        { "Name": "N/A", "Image": "imgs/actions/empty" },
         { "Name": "Off", "Image": "imgs/actions/traction-control-off" },
         { "Name": "On", "Image": "imgs/actions/traction-control-on" }
       ]
