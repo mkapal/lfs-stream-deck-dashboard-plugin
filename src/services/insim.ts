@@ -1,3 +1,4 @@
+import streamDeck from "@elgato/streamdeck";
 import { InSim } from "node-insim";
 import {
   InSimFlags,
@@ -7,7 +8,6 @@ import {
   SmallType,
   TinyType,
 } from "node-insim/packets";
-import streamDeck from "@elgato/streamdeck";
 
 type Cfg = { host: string; port: number; admin: string };
 
@@ -17,28 +17,30 @@ const headlightStates = ["off", "side", "low", "high"] as const;
 type IndicatorState = (typeof indicatorStates)[number];
 type HeadlightState = (typeof headlightStates)[number];
 
+export type CarSwitchesState = {
+  indicators: IndicatorState;
+  head: HeadlightState;
+  fogFront: boolean;
+  fogRear: boolean;
+};
+
+const initialCarSwitches: CarSwitchesState = {
+  indicators: "off",
+  head: "off",
+  fogFront: false,
+  fogRear: false,
+};
+
+const CAR_LIGHTS_POLL_MS = 100;
+
 class InSimHub {
   private cfg?: Cfg;
-  private insim: InSim = new InSim();
-  private isConnecting = false;
+  private inSim?: InSim;
   private isConnected = false;
   private carLightsInterval: NodeJS.Timeout | null = null;
 
-  private carSwitchesState: {
-    indicators: IndicatorState;
-    head: HeadlightState;
-    fogFront: boolean;
-    fogRear: boolean;
-  } = {
-    indicators: "off",
-    head: "off",
-    fogFront: false,
-    fogRear: false,
-  };
-
-  private switchesListeners = new Set<
-    (s: typeof this.carSwitchesState) => void
-  >();
+  private carSwitchesState: CarSwitchesState = initialCarSwitches;
+  private switchesListeners = new Set<(s: CarSwitchesState) => void>();
 
   async applyConfig(next: Cfg) {
     const changed =
@@ -50,43 +52,57 @@ class InSimHub {
     this.cfg = next;
 
     if (changed) {
-      await this.reconnect();
+      this.reconnect();
     } else {
       this.connectOnce();
     }
   }
 
   private connectOnce() {
-    streamDeck.logger.debug("Connect InSim once");
-    if (this.isConnecting) {
-      streamDeck.logger.debug("Cannot connect - already connecting");
-      return;
-    }
-    if (this.isConnected) {
-      streamDeck.logger.debug("Cannot connect - already connected");
-      return;
-    }
+    if (this.inSim) return;
     if (!this.cfg) throw new Error("InSimHub not configured");
-    streamDeck.logger.debug("Connecting InSim...");
 
-    this.isConnecting = true;
+    streamDeck.logger.debug(
+      `Connecting InSim ${this.cfg.host}:${this.cfg.port}...`,
+    );
 
-    this.insim.on("connect", () => {
-      streamDeck.logger.debug(
-        `InSim connected ${this.cfg!.host}:${this.cfg!.port}`,
-      );
+    const inSim = new InSim();
+    this.inSim = inSim;
+
+    inSim.on("connect", () => {
+      streamDeck.logger.debug("InSim connected");
       this.isConnected = true;
     });
 
-    this.insim.on("disconnect", () => {
+    inSim.on("disconnect", () => {
       streamDeck.logger.debug("InSim disconnected");
       this.isConnected = false;
-      if (this.carLightsInterval) {
-        clearInterval(this.carLightsInterval);
+      this.stopPolling();
+    });
+
+    inSim.on(PacketType.ISP_VER, (packet) => {
+      if (packet.ReqI === IS_ISI_ReqI.SEND_VERSION) {
+        this.stopPolling();
+        this.carLightsInterval = setInterval(() => {
+          inSim.send(new IS_TINY({ ReqI: 1, SubT: TinyType.TINY_LCL }));
+        }, CAR_LIGHTS_POLL_MS);
       }
     });
 
-    this.insim.connect({
+    inSim.on(PacketType.ISP_SMALL, (packet) => {
+      if (packet.ReqI !== 1 || packet.SubT !== SmallType.SMALL_LCL) return;
+
+      const u = packet.UVal;
+
+      this.setCarSwitches({
+        indicators: indicatorStates[(u & (3 << 16)) >> 16] ?? "off",
+        head: headlightStates[(u & (3 << 18)) >> 18] ?? "off",
+        fogFront: (u & (1 << 21)) !== 0,
+        fogRear: (u & (1 << 20)) !== 0,
+      });
+    });
+
+    inSim.connect({
       IName: "StreamDeckDash",
       Host: this.cfg.host,
       Port: this.cfg.port,
@@ -94,123 +110,85 @@ class InSimHub {
       Flags: InSimFlags.ISF_LOCAL,
       ReqI: IS_ISI_ReqI.SEND_VERSION,
     });
-
-    this.insim.on(PacketType.ISP_VER, (packet) => {
-      if (packet.ReqI === IS_ISI_ReqI.SEND_VERSION) {
-        this.carLightsInterval = setInterval(() => {
-          this.insim.send(
-            new IS_TINY({
-              ReqI: 1,
-              SubT: TinyType.TINY_LCL,
-            }),
-          );
-        }, 100);
-      }
-    });
-
-    this.insim.on(PacketType.ISP_SMALL, (packet) => {
-      if (packet.ReqI === 1 && packet.SubT === SmallType.SMALL_LCL) {
-        const u = packet.UVal;
-        const indicatorValue = (u & (3 << 16)) >> 16;
-        const indicators = indicatorStates[indicatorValue] ?? "off";
-
-        const headVal = (u & (3 << 18)) >> 18;
-
-        const head = headlightStates[headVal] ?? "off";
-
-        const fogFront = (u & (1 << 21)) >> 21 !== 0;
-        const fogRear = (u & (1 << 20)) >> 20 !== 0;
-
-        const next = { indicators, head, fogFront, fogRear } as const;
-        const changed =
-          next.indicators !== this.carSwitchesState.indicators ||
-          next.head !== this.carSwitchesState.head ||
-          next.fogFront !== this.carSwitchesState.fogFront ||
-          next.fogRear !== this.carSwitchesState.fogRear;
-
-        if (changed) {
-          this.carSwitchesState = { ...next };
-          for (const cb of this.switchesListeners) cb(this.carSwitchesState);
-        }
-      }
-    });
-
-    this.isConnecting = false;
   }
 
-  subscribeCarSwitches(
-    cb: (s: typeof this.carSwitchesState) => void,
-  ): () => void {
+  private stopPolling() {
+    if (this.carLightsInterval) {
+      clearInterval(this.carLightsInterval);
+      this.carLightsInterval = null;
+    }
+  }
+
+  private setCarSwitches(next: CarSwitchesState) {
+    const prev = this.carSwitchesState;
+
+    if (
+      next.indicators === prev.indicators &&
+      next.head === prev.head &&
+      next.fogFront === prev.fogFront &&
+      next.fogRear === prev.fogRear
+    ) {
+      return;
+    }
+
+    this.carSwitchesState = next;
+    for (const cb of this.switchesListeners) cb(next);
+  }
+
+  subscribeCarSwitches(cb: (s: CarSwitchesState) => void): () => void {
     this.connectOnce();
     this.switchesListeners.add(cb);
     cb(this.carSwitchesState);
-    return () => this.switchesListeners.delete(cb);
+
+    return () => {
+      this.switchesListeners.delete(cb);
+    };
   }
 
   reconnect() {
-    streamDeck.logger.debug("Reconnect");
-    if (this.isConnecting) return;
-
-    if (this.isConnected) {
-      streamDeck.logger.debug("Is connected - disconnecting");
-      this.insim.disconnect();
-      this.insim.removeAllListeners();
-
-      this.insim.on("disconnect", () => {
-        streamDeck.logger.debug("Disconnected - reconnecting");
-        this.isConnected = false;
-
-        if (this.carLightsInterval) {
-          clearInterval(this.carLightsInterval);
-        }
-
-        this.connectOnce();
-      });
-    } else {
-      streamDeck.logger.debug("Connecting");
-      this.connectOnce();
-    }
+    streamDeck.logger.debug("Reconnect InSim");
+    this.disconnect();
+    this.connectOnce();
   }
 
   disconnect() {
-    if (this.carLightsInterval) {
-      clearInterval(this.carLightsInterval);
-    }
-    this.insim.disconnect();
-    this.insim.removeAllListeners();
+    this.stopPolling();
+    this.inSim?.disconnect();
+    this.inSim?.removeAllListeners();
+    this.inSim = undefined;
+
+    this.isConnected = false;
+    this.setCarSwitches(initialCarSwitches);
   }
 
   sendCommand(cmd: string) {
     this.connectOnce();
+
     try {
-      this.insim?.sendMessage(cmd);
+      this.inSim?.sendMessage(cmd);
     } catch (e) {
       streamDeck.logger.error("InSim send failed:", e);
     }
   }
 
   toggleIndicators(indicators: Exclude<IndicatorState, "off">) {
-    if (!this.isConnected) {
-      return;
-    }
+    if (!this.isConnected) return;
 
-    if (this.carSwitchesState.indicators === indicators) {
-      this.insim.sendMessage(`/light ind off`);
-    } else {
-      this.insim.sendMessage(`/light ind ${indicators}`);
-    }
+    this.sendCommand(
+      this.carSwitchesState.indicators === indicators
+        ? "/light ind off"
+        : `/light ind ${indicators}`,
+    );
   }
 
   toggleLights(lights: Exclude<HeadlightState, "off">) {
-    if (!this.isConnected) {
-      return;
-    }
+    if (!this.isConnected) return;
 
-    if (this.carSwitchesState.head === lights) {
-      this.insim.sendMessage(`/light head off`);
-    } else {
-      this.insim.sendMessage(`/light head ${lights}`);
-    }
+    this.sendCommand(
+      this.carSwitchesState.head === lights
+        ? "/light head off"
+        : `/light head ${lights}`,
+    );
   }
 }
 

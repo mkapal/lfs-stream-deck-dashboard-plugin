@@ -46,7 +46,9 @@ class OutGaugeHub {
     this.startOnce();
     this.listeners.add(cb);
     if (this.last) cb(this.last); // instant sync for newly appeared actions
-    return () => this.listeners.delete(cb);
+    return () => {
+      this.listeners.delete(cb);
+    };
   }
 }
 

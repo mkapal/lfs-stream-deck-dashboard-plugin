@@ -1,11 +1,15 @@
 {
-  "extends": "@tsconfig/node20/tsconfig.json",
   "compilerOptions": {
-    "customConditions": ["node"],
-    "module": "ES2022",
-    "moduleResolution": "Bundler",
-    "noImplicitOverride": true
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noImplicitOverride": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "types": ["node", "vite/client"]
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

@@ -1,28 +1,29 @@
 {
+  "name": "lfs-stream-deck-dashboard-plugin",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "build": "rollup -c",
-    "watch": "rollup -c -w --watch.onEnd=\"streamdeck restart com.martinkapal.lfs.dashboard\"",
+    "build": "vite build",
+    "watch": "vite build --watch",
+    "typecheck": "tsc --noEmit",
     "format": "prettier --write ."
   },
-  "type": "module",
-  "devDependencies": {
-    "@elgato/cli": "^1.6.0",
-    "@rollup/plugin-commonjs": "^28.0.0",
-    "@rollup/plugin-node-resolve": "^15.2.2",
-    "@rollup/plugin-terser": "^0.4.4",
-    "@rollup/plugin-typescript": "^12.1.0",
-    "@tsconfig/node20": "^20.1.2",
-    "@types/node": "~20.15.0",
-    "cross-env": "^10.1.0",
-    "prettier": "^3.7.4",
-    "rollup": "^4.0.2",
-    "tslib": "^2.6.2",
-    "typescript": "^5.2.2"
-  },
   "dependencies": {
-    "@elgato/streamdeck": "^2.0.0",
-    "dotenv": "^17.2.3",
-    "node-insim": "^6.1.0"
+    "@elgato/streamdeck": "^2.0.2",
+    "@fcannizzaro/streamdeck-react": "^0.3.0",
+    "node-insim": "^6.5.0",
+    "react": "19.2.8"
+  },
+  "devDependencies": {
+    "@elgato/cli": "^1.7.1",
+    "@elgato/utils": "^0.6.2",
+    "@types/node": "^24.0.0",
+    "@types/react": "19.2.18",
+    "@vitejs/plugin-react": "^6.1.0",
+    "prettier": "^3.7.4",
+    "typescript": "~6.0.3",
+    "vite": "^8.2.4"
   },
   "packageManager": "pnpm@10.27.0+sha512.72d699da16b1179c14ba9e64dc71c9a40988cbdc65c264cb0e489db7de917f20dcf4d64d8723625f2969ba52d4b7e2a1170682d9ac2a5dcaeaab732b7e16f04a"
 }
